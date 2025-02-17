@@ -2,6 +2,13 @@
 #include <iostream>
 #include <iomanip>
 
+PhoneBook::PhoneBook() : currentIndex(0), totalContacts(0) {}
+PhoneBook::~PhoneBook() {}
+
+void	PhoneBook::addContact() const {
+
+}
+
 void	PhoneBook::displayContactList() const {
 	std::cout << std::setw(10) << "Index" << "|";
 	std::cout << std::setw(10) << "First Name" << "|";
