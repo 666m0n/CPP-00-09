@@ -1,6 +1,6 @@
-NAME = Harl
+NAME = fixed
 
-SRCS = main.cpp Harl.cpp
+SRCS = main.cpp Fixed.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 CXX = c++
