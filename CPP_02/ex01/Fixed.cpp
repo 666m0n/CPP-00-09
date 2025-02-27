@@ -1,8 +1,20 @@
 #include "Fixed.hpp"
 #include <iostream>
+#include <cmath>
 
 Fixed::Fixed() : _fixedPointValue(0) {
 	std::cout << "Default constructor called" << std::endl;
+}
+
+Fixed::Fixed(const int value) {
+	std::cout << "Int constructor called" << std::endl;
+	_fixedPointValue = value << _fractionalBits;
+}
+
+Fixed::Fixed(const float value) {
+	std::cout << "Float constructor called" << std::endl;
+	// On multiplie le flottant par 2^_fractionalBits et on arrondit
+	_fixedPointValue = roundf(value * (1 << _fractionalBits));
 }
 
 Fixed::Fixed(const Fixed &src) {
@@ -28,4 +40,17 @@ int Fixed::getRawBits(void) const {
 
 void Fixed::setRawBits(int const raw) {
 	this->_fixedPointValue = raw;
+}
+
+float Fixed::toFloat(void) const {
+	return static_cast<float>(_fixedPointValue) / (1 << _fractionalBits);
+}
+
+int Fixed::toInt(void) const {
+	return _fixedPointValue >> _fractionalBits;
+}
+
+std::ostream &operator<<(std::ostream &out, const Fixed &fixed) {
+	out << fixed.toFloat();
+	return out;
 }
