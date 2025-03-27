@@ -6,7 +6,7 @@ class	Fixed {
 		int	_fixedPointValue;
 		static const int _fractionalBits = 8;
 	public:
-		Fixed();
+		Fixed(); // constructeur par defaut
 		Fixed(const Fixed &src);
 		//pour la surcharge de l'operateur d'affectation
 		Fixed &operator=(const Fixed &rhs);
