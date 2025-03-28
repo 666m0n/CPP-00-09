@@ -1,59 +1,59 @@
 #include "MateriaSource.hpp"
 
 MateriaSource::MateriaSource() {
-    std::cout << "MateriaSource constructor called" << std::endl;
-    // Initialiser les templates à NULL
-    for (int i = 0; i < 4; i++) {
-        this->templates[i] = NULL;
-    }
+	std::cout << "MateriaSource constructor called" << std::endl;
+	// Initialiser les templates à NULL
+	for (int i = 0; i < 4; i++) {
+		this->templates[i] = NULL;
+	}
 }
 
 MateriaSource::MateriaSource(const MateriaSource& other) {
-    std::cout << "MateriaSource copy constructor called" << std::endl;
-    // Copie profonde des templates
-    for (int i = 0; i < 4; i++) {
-        if (other.templates[i])
-            this->templates[i] = other.templates[i]->clone();
-        else
-            this->templates[i] = NULL;
-    }
+	std::cout << "MateriaSource copy constructor called" << std::endl;
+	// Copie profonde des templates
+	for (int i = 0; i < 4; i++) {
+		if (other.templates[i])
+			this->templates[i] = other.templates[i]->clone();
+		else
+			this->templates[i] = NULL;
+	}
 }
 
 MateriaSource::~MateriaSource() {
-    std::cout << "MateriaSource destructor called" << std::endl;
-    // Nettoyer les templates
-    for (int i = 0; i < 4; i++) {
-        if (this->templates[i]) {
-            delete this->templates[i];
-            this->templates[i] = NULL;
-        }
-    }
+	std::cout << "MateriaSource destructor called" << std::endl;
+	// Nettoyer les templates
+	for (int i = 0; i < 4; i++) {
+		if (this->templates[i]) {
+			delete this->templates[i];
+			this->templates[i] = NULL;
+		}
+	}
 }
 
 MateriaSource& MateriaSource::operator=(const MateriaSource& other) {
-    std::cout << "MateriaSource assignment operator called" << std::endl;
-    if (this != &other) {
-        // Nettoyer les templates actuels
-        for (int i = 0; i < 4; i++) {
-            if (this->templates[i]) {
-                delete this->templates[i];
-                this->templates[i] = NULL;
-            }
-        }
+	std::cout << "MateriaSource assignment operator called" << std::endl;
+	if (this != &other) {
+		// Nettoyer les templates actuels
+		for (int i = 0; i < 4; i++) {
+			if (this->templates[i]) {
+				delete this->templates[i];
+				this->templates[i] = NULL;
+			}
+		}
 
-        // Copie profonde des templates
-        for (int i = 0; i < 4; i++) {
-            if (other.templates[i])
-                this->templates[i] = other.templates[i]->clone();
-            else
-                this->templates[i] = NULL;
-        }
-    }
-    return *this;
+		// Copie profonde des templates
+		for (int i = 0; i < 4; i++) {
+			if (other.templates[i])
+				this->templates[i] = other.templates[i]->clone();
+			else
+				this->templates[i] = NULL;
+		}
+	}
+	return *this;
 }
 
 void MateriaSource::learnMateria(AMateria* m) {
-    if (!m) {
+	if (!m) {
         std::cout << "Cannot learn NULL materia" << std::endl;
         return;
     }

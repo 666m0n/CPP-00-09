@@ -6,19 +6,19 @@
 
 class Cat : public Animal {
 private:
-    Brain* brain;  // Nouveau membre privé
+	Brain* brain;  // Nouveau membre privé
 
 public:
-    Cat();
-    Cat(const Cat& other);
-    virtual ~Cat();
+	Cat();
+	Cat(const Cat& other);
+	virtual ~Cat();
 
-    Cat& operator=(const Cat& other);
+	Cat& operator=(const Cat& other);
 
-    virtual void makeSound() const;
+	virtual void makeSound() const;
 
-    // Accesseurs pour le cerveau
-    Brain* getBrain() const;
+	// Accesseurs pour le cerveau
+	Brain* getBrain() const;
 };
 
 #endif

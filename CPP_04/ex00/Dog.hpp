@@ -5,14 +5,14 @@
 
 class Dog : public Animal {
 public:
-    Dog();
-    Dog(const Dog& other);
-    virtual ~Dog();
+	Dog();
+	Dog(const Dog& other);
+	virtual ~Dog();
 
-    Dog& operator=(const Dog& other);
+	Dog& operator=(const Dog& other);
 
-    // Surcharge de la fonction makeSound
-    virtual void makeSound() const;
+	// Surcharge de la fonction makeSound
+	virtual void makeSound() const;
 };
 
 #endif
