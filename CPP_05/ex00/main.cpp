@@ -51,7 +51,7 @@ int main() {
 		std::cout << "Initial: " << topBoss << std::endl;
 
 		std::cout << "Trying to increment (should fail)..." << std::endl;
-		topBoss.incrementGrade(); // Should throw exception (already at top grade)
+		topBoss.incrementGrade();
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
 	}
@@ -61,7 +61,7 @@ int main() {
 		std::cout << "Initial: " << bottomIntern << std::endl;
 
 		std::cout << "Trying to decrement (should fail)..." << std::endl;
-		bottomIntern.decrementGrade(); // Should throw exception (already at bottom grade)
+		bottomIntern.decrementGrade();
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
 	}
