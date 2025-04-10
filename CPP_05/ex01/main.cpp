@@ -19,28 +19,28 @@ int main() {
 
 	std::cout << "\n===== TESTING INVALID FORMS =====" << std::endl;
 	try {
-		Form tooHighSign("Invalid Form", 0, 50); // Should throw exception (sign grade too high)
+		Form tooHighSign("Invalid Form", 0, 50);
 		std::cout << tooHighSign << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
 	}
 
 	try {
-		Form tooHighExec("Invalid Form", 50, 0); // Should throw exception (exec grade too high)
+		Form tooHighExec("Invalid Form", 50, 0);
 		std::cout << tooHighExec << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
 	}
 
 	try {
-		Form tooLowSign("Invalid Form", 151, 50); // Should throw exception (sign grade too low)
+		Form tooLowSign("Invalid Form", 151, 50);
 		std::cout << tooLowSign << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
 	}
 
 	try {
-		Form tooLowExec("Invalid Form", 50, 151); // Should throw exception (exec grade too low)
+		Form tooLowExec("Invalid Form", 50, 151);
 		std::cout << tooLowExec << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
@@ -73,25 +73,25 @@ int main() {
 		Form standardForm2("Standard Procedure", 75, 30);
 		Form basicForm2("Basic Request", 120, 100);
 
-		manager.signForm(highSecurityForm2); // Should fail
-		manager.signForm(standardForm2);     // Should succeed
-		manager.signForm(basicForm2);        // Should succeed
+		manager.signForm(highSecurityForm2);
+		manager.signForm(standardForm2);
+		manager.signForm(basicForm2);
 
 		Form highSecurityForm3("High Security Clearance", 20, 5);
 		Form standardForm3("Standard Procedure", 75, 30);
 		Form basicForm3("Basic Request", 120, 100);
 
-		employee.signForm(highSecurityForm3); // Should fail
-		employee.signForm(standardForm3);     // Should fail
-		employee.signForm(basicForm3);        // Should succeed
+		employee.signForm(highSecurityForm3);
+		employee.signForm(standardForm3);
+		employee.signForm(basicForm3);
 
 		Form highSecurityForm4("High Security Clearance", 20, 5);
 		Form standardForm4("Standard Procedure", 75, 30);
 		Form basicForm4("Basic Request", 120, 100);
 
-		intern.signForm(highSecurityForm4); // Should fail
-		intern.signForm(standardForm4);     // Should fail
-		intern.signForm(basicForm4);        // Should fail
+		intern.signForm(highSecurityForm4);
+		intern.signForm(standardForm4);
+		intern.signForm(basicForm4);
 
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
