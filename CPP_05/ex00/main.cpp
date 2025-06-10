@@ -18,14 +18,14 @@ int main() {
 
 	std::cout << "\n===== TESTING INVALID BUREAUCRATS =====" << std::endl;
 	try {
-		Bureaucrat tooHigh("Too High", 0); // Should throw exception (too high)
+		Bureaucrat tooHigh("Too High", 0);
 		std::cout << tooHigh << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
 	}
 
 	try {
-		Bureaucrat tooLow("Too Low", 151); // Should throw exception (too low)
+		Bureaucrat tooLow("Too Low", 151);
 		std::cout << tooLow << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
@@ -36,10 +36,10 @@ int main() {
 		Bureaucrat employee("Employee", 75);
 		std::cout << "Initial: " << employee << std::endl;
 
-		employee.incrementGrade(); // 75 -> 74
+		employee.incrementGrade();
 		std::cout << "After increment: " << employee << std::endl;
 
-		employee.decrementGrade(); // 74 -> 75
+		employee.decrementGrade();
 		std::cout << "After decrement: " << employee << std::endl;
 	} catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
