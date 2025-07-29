@@ -30,7 +30,7 @@ void testLargeNumbers() {
 
 	Span largeSpan(10000);
 
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+	std::srand(static_cast<unsigned int>(std::time(NULL)));
 	for (int i = 0; i < 10000; ++i) {
 		largeSpan.addNumber(std::rand() % 1000000);
 	}
