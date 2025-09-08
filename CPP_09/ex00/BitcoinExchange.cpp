@@ -1,177 +1,140 @@
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange() {}
-
-BitcoinExchange::BitcoinExchange(const BitcoinExchange &src) {
-	*this = src;
+BitcoinExchange::BitcoinExchange(std::string const& string) : _input(string){
+	loadCSV();
+	parseInput();
 }
 
-BitcoinExchange::~BitcoinExchange() {}
+BitcoinExchange::BitcoinExchange(BitcoinExchange const& copy) : _dataBase(copy._dataBase), _input(copy._input){
+	loadCSV();
+	parseInput();
+}
 
-BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &src) {
-	if (this != &src) {
-		this->_database = src._database;
+BitcoinExchange& BitcoinExchange::operator=(BitcoinExchange const& rhs){
+	if (this != &rhs)
+	{
+		this->_dataBase = rhs._dataBase;
 	}
 	return *this;
 }
 
-void BitcoinExchange::loadDatabase(const std::string &filename) {
-	std::ifstream file(filename.c_str());
-
-	if (!file.is_open()) {
-		throw std::runtime_error("Could not open database file");
+void	BitcoinExchange::loadCSV(){
+	std::ifstream infile("data.csv");
+	if (!infile)
+	{
+		std::cerr << "Error: could not open file" << std::endl;
+		exit(EXIT_FAILURE);
 	}
-
 	std::string line;
-    // Ignorer la première ligne (en-tête)
-	std::getline(file, line);
-
-	while (std::getline(file, line)) {
+	std::string header;
+	std::getline(infile, header);
+	while (std::getline(infile, line))
+	{
 		std::istringstream iss(line);
 		std::string date;
-		std::string rateStr;
+		std::string rate;
+		if (getline(iss, date, ',') && getline(iss, rate))
+		{
+			try {
+				char *end;
 
-		// Lire la date et le taux
-		if (std::getline(iss, date, ',') && std::getline(iss, rateStr)) {
-			float rate;
-			std::istringstream(rateStr) >> rate;
-
-            // Stocker dans la map
-			_database[date] = rate;
+				double nb = strtod(rate.c_str(), &end);
+				_dataBase[date] = nb;
+			}
+			catch (std::exception &e) {
+				std::cerr << "Cannot convert lign : " << e.what() << std::endl;
+			}
 		}
 	}
 
-	file.close();
+	// TO PRINT THE CSV
+	// std::map<std::string, double>::iterator it = _dataBase.begin();
+	// std::map<std::string, double>::iterator ite = _dataBase.end();
+	// for (; it != ite; it++){
+	// 	std::cout << std::fixed << std::setprecision(2);
+	// 	std::cout << it->first << " : " << it->second << std::endl;
+	// }
 }
 
-bool BitcoinExchange::isValidDate(const std::string &date) const {
-    // Vérifier le format YYYY-MM-DD
-	if (date.length() != 10)
-		return false;
-
-	if (date[4] != '-' || date[7] != '-')
-		return false;
-
-    // Vérifier que les caractères sont des chiffres
-	for (int i = 0; i < 10; i++) {
-		if (i == 4 || i == 7)
-			continue;
-		if (!isdigit(date[i]))
-			return false;
-	}
-
-    // Convertir les composants en nombres
-	int year, month, day;
-	std::istringstream(date.substr(0, 4)) >> year;
-	std::istringstream(date.substr(5, 2)) >> month;
-	std::istringstream(date.substr(8, 2)) >> day;
-
-    // Vérifier les valeurs
-	if (month < 1 || month > 12)
-		return false;
-
-	if (day < 1 || day > 31)
-		return false;
-
-    // Vérifier les mois avec 30 jours
-	if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
-		return false;
-
-    // Vérifier février
-	if (month == 2) {
-		bool isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-		if (day > (isLeapYear ? 29 : 28))
-			return false;
-	}
-
-	return true;
+static bool isAllowed(char c)
+{
+	return ((c >= '0' && c <= '9') || (c == '-') || (c == ' '));
 }
 
-bool BitcoinExchange::isValidValue(const float value) const {
-	return value >= 0 && value <= 1000;
+static bool isValid(std::string const& date)
+{
+	for (size_t i = 0; i < date.size() ; i++)
+		if (!isAllowed(date[i]))
+			return 0;
+	return 1;
 }
 
-float BitcoinExchange::getExchangeRate(const std::string &date) const {
-    // Trouver la date exacte ou la date antérieure la plus proche
-	std::map<std::string, float>::const_iterator it = _database.lower_bound(date);
+static bool validDate(std::string const& date)
+{
+	if (date.empty())
+		return std::cerr << "Error: empty date." << std::endl, 0;
+	if (date.length() != 11 || date[4] != '-' || date[7] != '-')
+		return std::cerr << "Error: wrong format." << std::endl, 0;
+	if (!isValid(date))
+		return std::cerr << "Error: wrong character." << std::endl, 0;
 
-    // Si la date existe exactement, retourner son taux
-	if (it != _database.end() && it->first == date) {
-		return it->second;
+	std::istringstream iss(date);
+	std::string year, month, day;
+	if (getline(iss, year, '-') && getline(iss, month, '-') && getline(iss, day))
+	{
+		if (!(atoi(year.c_str()) > 2008 && atoi(year.c_str()) < 2026))
+			return std::cerr << "Error: bitcoin rate does not exist at this date." << std::endl, 0;
+		if (!(atoi(month.c_str()) > 0 || atoi(month.c_str()) < 13))
+			return std::cerr << "Error: bad input => " << date << std::endl, 0;
+		if (!(atoi(day.c_str()) > 0 && atoi(day.c_str()) < 32))
+			return std::cerr << "Error: bad input => " << date << std::endl, 0;
+		if (atoi(year.c_str()) == 2025 && atoi(month.c_str()) == 4 && atoi(day.c_str()) > 15)
+			return std::cerr << "Error: bitcoin rate does not exist at this date." << std::endl, 0;
 	}
+	return 1;
+}
 
-    // Si la date est avant la première entrée de la base, lancer une exception
-	if (it == _database.begin()) {
-		throw std::runtime_error("Date too early, no exchange rate available");
-	}
+static bool validRate(double rate)
+{
+	if (rate < 0)
+		return std::cerr << "Error: not a positive number." << std::endl, 0;
+	if (rate > 1000)
+		return std::cerr << "Error: too large number." << std::endl, 0;
+	return 1;
+}
 
-    // Sinon, retourner la date antérieure la plus proche
-	--it;
+double BitcoinExchange::getNearest(std::string const& date){
+	std::map<std::string, double>::iterator it = _dataBase.upper_bound(date);
+	it--;
 	return it->second;
 }
 
-void BitcoinExchange::processInput(const std::string &filename) {
-	std::ifstream file(filename.c_str());
-
-	if (!file.is_open()) {
-		throw std::runtime_error("Could not open input file");
+void	BitcoinExchange::parseInput(){
+	std::ifstream infile(_input.c_str());
+	if (!infile)
+	{
+		std::cerr << "Error: could not open file" << std::endl;
+		exit(EXIT_FAILURE);
 	}
-
 	std::string line;
-    // Ignorer la première ligne (en-tête)
-	std::getline(file, line);
-
-	while (std::getline(file, line)) {
+	std::string header;
+	std::getline(infile, header);
+	while (std::getline(infile, line))
+	{
 		std::istringstream iss(line);
-		std::string dateStr;
-		std::string valueStr;
+		std::string date;
+		std::string rate;
+		if (getline(iss, date, '|') && getline(iss, rate))
+		{
+			char *end;
 
-        // Vérifier le format "date | value"
-		size_t pipePos = line.find(" | ");
-		if (pipePos == std::string::npos) {
-			std::cerr << "Error: bad input => " << line << std::endl;
-			continue;
+			double nb = strtod(rate.c_str(), &end);
+			if (*end != '\0')
+				std::cerr << "Error: convertion from str to double failed." << std::endl;
+			if (validDate(date) && validRate(nb))
+				std::cout << date << "=>" << rate << " => " << getNearest(date) * nb << std::endl;
 		}
-
-		dateStr = line.substr(0, pipePos);
-		valueStr = line.substr(pipePos + 3);
-
-        // Vérifier la validité de la date
-		if (!isValidDate(dateStr)) {
-			std::cerr << "Error: bad input => " << line << std::endl;
-			continue;
-		}
-
-        // Convertir et vérifier la validité de la valeur
-		float value;
-		try {
-			value = std::stof(valueStr);
-		} catch (const std::exception &e) {
-			std::cerr << "Error: not a number." << std::endl;
-			continue;
-		}
-
-		if (value < 0) {
-			std::cerr << "Error: not a positive number." << std::endl;
-			continue;
-		}
-
-		if (value > 1000) {
-			std::cerr << "Error: too large a number." << std::endl;
-			continue;
-		}
-
-		try {
-            // Obtenir le taux de change et calculer la valeur
-			float rate = getExchangeRate(dateStr);
-			float result = value * rate;
-
-            // Afficher le résultat
-			std::cout << dateStr << " => " << value << " = " << result << std::endl;
-		} catch (const std::exception &e) {
-			std::cerr << "Error: " << e.what() << std::endl;
-		}
+		else
+			std::cerr << "Error: bad input => " << date << std::endl;
 	}
-
-	file.close();
 }

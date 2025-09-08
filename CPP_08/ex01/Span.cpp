@@ -19,7 +19,7 @@ Span &Span::operator=(const Span &rhs) {
 Span::~Span() {}
 
 void Span::addNumber(int number) {
-	if (_numbers.size() >= _N)
+	if (_numbers.size() >= _N) 
 		throw FullSpanException();
 
 	_numbers.push_back(number);

@@ -72,7 +72,7 @@ void testAddRange() {
 void testEdgeCases() {
 	std::cout << "\n=== Edge Cases Test ===" << std::endl;
 
-	Span emptySpan(5);
+	Span emptySpan(0);
 	try {
 		std::cout << "Testing spans on empty container..." << std::endl;
 		emptySpan.shortestSpan();
