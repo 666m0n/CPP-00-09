@@ -46,14 +46,6 @@ void	BitcoinExchange::loadCSV(){
 			}
 		}
 	}
-
-	// TO PRINT THE CSV
-	// std::map<std::string, double>::iterator it = _dataBase.begin();
-	// std::map<std::string, double>::iterator ite = _dataBase.end();
-	// for (; it != ite; it++){
-	// 	std::cout << std::fixed << std::setprecision(2);
-	// 	std::cout << it->first << " : " << it->second << std::endl;
-	// }
 }
 
 static bool isAllowed(char c)
