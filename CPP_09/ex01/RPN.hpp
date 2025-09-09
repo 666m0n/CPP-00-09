@@ -6,7 +6,7 @@
 #include <fstream>
 #include <limits>
 #include <cmath>
-#include <iomanip> // precision output , fixed empeche nota scientifique
+#include <iomanip>
 
 class RPN {
 	private:
