@@ -14,27 +14,27 @@
 
 class RPN
 {
-    
+
     public:
         RPN();
         ~RPN();
-        
+
         ////MEMBER FUNCS
         void    execRPN(const std::string& args);
-    
+
     private:
         std::stack<int> _stack;
 
         //checkers
         bool    isOperator(const std::string& token) const;
-        bool isValidINT(const std::string& token, int& value) const;
+        bool    isValidINT(const std::string& token, int& value) const;
 
-        int     applyOperator(int front, int latter, const std::string& op) const;
+        int     DoOperation(int front, int latter, const std::string& op) const;
         void    applyPrintStack(const std::stack<int>& stack);
 };
 
 
-#endif 
+#endif
 
 
 /* STEPS
@@ -56,7 +56,7 @@ class RPN
     - If the stack has exactly one number, print it as the result
     - Else, print "Error" to std::cerr
 
-class RPN 
+class RPN
 {
     public:
         RPN() = default;                 // Let compiler handle this

@@ -29,7 +29,7 @@ void BitcoinExchange::loadData(const std::string& filename)
     std::ifstream file(filename.c_str());
     if (!file.is_open())
         throw std::runtime_error(ERR_OPEN_FILE);
-    
+
     //Skip header line: "date,exchange_rate"!!
     std::string line;
     getline(file, line);
@@ -129,7 +129,7 @@ bool BitcoinExchange::parseFileContent(const std::string& line, std::string& dat
  */
 void BitcoinExchange::parseInputFile(const std::string& fileName)
 {
-    //open 
+    //open
     std::ifstream file(fileName.c_str());
     if (!file.is_open())
         throw std::runtime_error(ERR_OPEN_FILE);
@@ -147,24 +147,11 @@ void BitcoinExchange::parseInputFile(const std::string& fileName)
     file.close();
 }
 
-//CHECKERS
-/** IS VALID DATE
- * static -> check dates
- * data content : 2009-01-02,0
- * check format first! YYYY-MM-DD!! 
- * 1 year
- * 2 month
- * 3 date
-*/
 bool BitcoinExchange::isValidDate(const std::string& date)
 {
     //format YYYY-MM-DD
     if (date.length() != 10 || date[4] != '-' || date[7] != '-')
         return false;
-        // case DATE:
-        //     std::cerr << ERR_DATE;
-        //     break;
-    //check if all digit
     for (size_t i = 0; i < date.length(); i++)
     {
         if (i == 4 || i == 7)
@@ -175,7 +162,7 @@ bool BitcoinExchange::isValidDate(const std::string& date)
 
     //parse checks
     int year, month, day;
-    
+
     std::istringstream y(date.substr(0, 4));
     y >> year;
 
@@ -188,7 +175,7 @@ bool BitcoinExchange::isValidDate(const std::string& date)
     //basic range check
     if (month < 0 || month > 12 || day < 1 || day > 31)
         return false;
-    
+
     //check month with only 30 days
     if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
         return false;
@@ -214,16 +201,16 @@ bool BitcoinExchange::isValidDate(const std::string& date)
  * @note iss.fail() → the extraction failed (not a number)
  * @note iss.eof() →  there are extra characters after the number
  * @note iss >> value; //Convert the string to a float
- * 
+ *
  * @return  return value must be within this range!! //value >= 0.0f && value <= 1000.0f
  */
 bool BitcoinExchange::isValidValue(const std::string& valueStr)
-{    
+{
 
     std::istringstream iss(valueStr);
     float value;
     iss >> value;
-    
+
     // Check if the conversion was successful
     if (iss.fail() || !iss.eof())
         return false;

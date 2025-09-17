@@ -33,7 +33,7 @@ bool RPN::isValidINT(const std::string& token, int& value) const
 }
 
 //apply operator
-int    RPN::applyOperator(int front, int latter, const std::string& op) const
+int    RPN::DoOperation(int front, int latter, const std::string& op) const
 {
     if (op == "+")
         return front + latter;
@@ -51,7 +51,7 @@ int    RPN::applyOperator(int front, int latter, const std::string& op) const
         return front / latter;
     }
         std::cerr << "Error" << std::endl;
-        return 1;//error return 1? 
+        return 1;//error return 1?
 
 }
 
@@ -100,7 +100,7 @@ void    RPN::execRPN(const std::string& args)
             //check operator pos -> should be 2 nb in stack first
             if (_stack.size() < 2)
             {
-                std::cerr << "Error: respect RPN rule, plz." << std::endl;
+                std::cerr << "Error: RPN not respected." << std::endl;
                 return;
             }
 
@@ -112,7 +112,7 @@ void    RPN::execRPN(const std::string& args)
             _stack.pop();// pop the second nb (front)
 
             //pop 2 nbs, then apply operator, then push back the result to stack
-            result = applyOperator(front, latter, token);
+            result = DoOperation(front, latter, token);
             _stack.push(result); //push back the result
 
             //check if result valid
@@ -120,7 +120,7 @@ void    RPN::execRPN(const std::string& args)
             {
                 std::cerr << "Error: Number out of range." << std::endl;
                 return;
-            } 
+            }
         }
         else
         {
@@ -131,19 +131,3 @@ void    RPN::execRPN(const std::string& args)
     }
     applyPrintStack(_stack);
 }
-
-/* stack example
-stack will always be added to the top!!
-
-"3 4 +" => (3 + 4)
-
-STEP 1. read 3 -> push 3 => stack = [3] (TOP)
-
-STPE 2. read 4 -> push 4 => stack = [4] (TOP)
-                                    [3]
-STPE 3. read +  
--> pop 4, pop 3 
--> apply + => (3 + 4 = 7)
---------> push 7 => stack = [7] (TOP)
-
-*/
