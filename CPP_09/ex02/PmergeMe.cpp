@@ -56,7 +56,7 @@ bool PmergeMe::parseInput(){
 			if (nb < 0 || nb > INT_MAX)
 			{
 				if (nb < 0)
-					std::cerr << "Error: Cannot sort negative number: " << nb << std::endl, 0;
+					return (std::cerr << "Error: Cannot sort negative number: " << nb << std::endl, 0);
 				else
 					std::cerr << "Error: too big number: " << nb << std::endl;
 				return 0;
