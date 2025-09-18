@@ -1,85 +1,103 @@
 #include "RPN.hpp"
 
-RPN::RPN(std::string const& string) : _input(string){
-	checkInput();
+RPN::RPN() : _stack(){}
+RPN::~RPN(){}
+
+bool    RPN::isOperator(const std::string& token) const
+{
+    if (token == "+" || token == "-" || token == "*" || token == "/")
+        return true;
+    return false;
 }
 
-RPN::RPN(RPN const& copy) : _stack(copy._stack), _input(copy._input){
-	checkInput();
+bool RPN::isValidINT(const std::string& token, int& value) const
+{
+    char* end = NULL;
+    errno = 0;
+    long result = std::strtol(token.c_str(), &end, 10);
+
+    if (*end != '\0' || errno == ERANGE || result > INT_MAX || result < INT_MIN)
+        return false;
+
+    value = static_cast<int>(result);
+    return true;
 }
 
-RPN& RPN::operator=(RPN const& rhs){
-	if (this != &rhs)
-	{
-		this->_stack = rhs._stack;
-	}
-	return *this;
+int    RPN::DoOperation(int front, int latter, const std::string& op) const
+{
+    if (op == "+")
+        return front + latter;
+    else if (op == "-")
+        return front - latter;
+    else if (op == "*")
+        return front * latter;
+    else if (op == "/")
+    {
+        if (latter == 0)
+        {
+            std::cerr << "Error: division by zero." << std::endl;
+            exit(1);
+        }
+        return front / latter;
+    }
+        std::cerr << "Error" << std::endl;
+        return 1;
+
 }
 
-static bool isAllowed(char c){
-	return ((c >= '0' && c <= '9') || c == ' ' || c == '+' || c == '-' || c == '*' || c == '/');
+void    RPN::applyPrintStack(const std::stack<int>& stack)
+{
+    if (stack.size() != 1)
+    {
+        std::cerr << "Error" << std::endl;
+        return;
+    }
+    std::cout << stack.top() << std::endl;
 }
 
-static bool isValid(std::string const& str){
-	for (size_t i = 0; i < str.size(); i++)
-		if (!isAllowed(str[i]))
-			return 0;
-	return 1;
-}
+void    RPN::execRPN(const std::string& args)
+{
+    std::istringstream iss(args);
+    std::string token;
+    int intMAX = std::numeric_limits<int>::max();
+    int intMIN = std::numeric_limits<int>::min();
+    int result = 0;
 
-void RPN::checkInput(){
-	if (!isValid(_input)) {
-		std::cerr << "Not a valid input." << std::endl;
-		return ;
-	}
-	doOperation();
-}
+    while (iss >> token)
+    {
+        int nb = 0;
+        if (isValidINT(token, nb))
+            _stack.push(nb);
 
-void RPN::doOperation(){
-	std::string const op = "/*-+";
-	std::stringstream ss(_input);
-	std::string token;
+        else if (isOperator(token))
+        {
+            if (_stack.size() < 2)
+            {
+                std::cerr << "Error: RPN not respected." << std::endl;
+                return;
+            }
 
-	while (ss >> token)
-	{
-		if (op.find(token) != std::string::npos)
-		{
-			if (_stack.size() != 2) {
-				std::cerr << "Cannot do this operation." << std::endl;
-				return;
-			}
+            int latter = _stack.top();
+            _stack.pop();
 
-			int b = _stack.top();
-			_stack.pop();
-			int a = _stack.top();
-			_stack.pop();
+            int front = _stack.top();
+            _stack.pop();
 
-			if (token == "-")
-				_stack.push(a - b);
-			else if (token == "+")
-				_stack.push(a + b);
-			else if (token == "*")
-				_stack.push(a * b);
-			else if (token == "/" && b != 0)
-				_stack.push(a / b);
-			else {
-				std::cerr << "Cannot divide by 0." << std::endl;
-				return;
-			}
-		}
-		else
-		{
-			int nb = atoi(token.c_str());
-			if (!(nb < 10 && nb > -1))
-			{
-				std::cerr << "Max value must be <= 9." << std::endl;
-				return;
-			}
-			_stack.push(nb);
-		}
-	}
-	if (_stack.size() != 1)
-		std::cerr << "Cannot do this operation." << std::endl;
-	else
-		std::cout << _stack.top() << std::endl;
+            result = DoOperation(front, latter, token);
+            _stack.push(result);
+
+            if (result > intMAX || result < intMIN)
+            {
+                std::cerr << "Error: Number out of range." << std::endl;
+                return;
+            }
+        }
+        else
+        {
+            std::cerr << "Error" << std::endl;
+            return ;
+
+        }
+    }
+    applyPrintStack(_stack);
 }

@@ -1,25 +1,35 @@
-#pragma once
+#ifndef RPN_HPP
+#define RPN_HPP
 
 #include <iostream>
-#include <stack>
-#include <sstream>
 #include <fstream>
+#include <sstream>
+#include <stack>
+#include <string>
 #include <limits>
-#include <cmath>
-#include <iomanip>
+#include <cstdlib>
 
-class RPN {
-	private:
-		std::stack<int>		_stack;
-		std::string const&	_input;
-		RPN();
+# define INT_MAX 2147483647
+# define INT_MIN -2147483648
 
-	public:
-		RPN(std::string const& string);
-		RPN(RPN const& copy);
-		~RPN(){}
-		RPN& operator=(RPN const& rhs);
+class RPN
+{
 
-		void	checkInput();
-		void	doOperation();
+    public:
+        RPN();
+        ~RPN();
+
+		void    execRPN(const std::string& args);
+
+    private:
+        std::stack<int> _stack;
+
+        bool    isOperator(const std::string& token) const;
+        bool    isValidINT(const std::string& token, int& value) const;
+
+        int     DoOperation(int front, int latter, const std::string& op) const;
+        void    applyPrintStack(const std::stack<int>& stack);
 };
+
+
+#endif
